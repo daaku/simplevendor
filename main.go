@@ -157,6 +157,9 @@ func getTransitiveImports(paths map[string]bool) ([]*build.Package, error) {
 }
 
 func isStd(path string) bool {
+	if path == "C" {
+		return true
+	}
 	p, err := build.Import(path, "", build.FindOnly)
 	if err != nil {
 		return false
