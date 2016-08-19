@@ -172,6 +172,16 @@ func vendor(dir string, pkg *build.Package) error {
 	if err := os.MkdirAll(targetDir, 0755); err != nil {
 		return err
 	}
+
+	// pkg.SFiles doesn't include ignored stuff, this will
+	sFiles, err := filepath.Glob(pkg.Dir + "/*.s")
+	if err != nil {
+		return err
+	}
+	for i, v := range sFiles {
+		sFiles[i] = filepath.Base(v)
+	}
+
 	sets := [][]string{
 		pkg.GoFiles,
 		pkg.CgoFiles,
@@ -180,7 +190,7 @@ func vendor(dir string, pkg *build.Package) error {
 		pkg.CXXFiles,
 		pkg.MFiles,
 		pkg.HFiles,
-		pkg.SFiles,
+		sFiles,
 		pkg.SwigFiles,
 		pkg.SwigCXXFiles,
 		pkg.SysoFiles,
